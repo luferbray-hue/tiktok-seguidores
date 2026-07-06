@@ -596,16 +596,16 @@
       const tema = $('iaTema').value.trim();
       const prompt = buildPrompt(tema);
       btn.disabled = true;
-      btn.textContent = '✨ Generando…';
+      btn.textContent = '✨ Generando… (puede tardar ~1 min)';
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 40000);
+        const timer = setTimeout(() => ctrl.abort(), 90000);
         const res = await fetch('https://text.pollinations.ai/openai', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           signal: ctrl.signal,
           body: JSON.stringify({
-            model: 'openai',
+            model: 'openai-fast',
             messages: [{ role: 'user', content: prompt }],
             private: true
           })
