@@ -1,4 +1,4 @@
-const CACHE = 'impulso-v3';
+const CACHE = 'impulso-v4';
 const ASSETS = [
   './',
   './index.html',

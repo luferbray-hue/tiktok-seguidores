@@ -265,8 +265,8 @@
       <div class="card" style="margin-bottom:14px">
         <h2>✨ Generar con IA</h2>
         <input type="text" id="iaTema" class="txt-input" placeholder="¿De qué trata tu cuenta? (ej: recetas, gym, humor)" maxlength="80" />
-        <button class="btn-ia" id="btnIA">✨ Generar ideas con IA</button>
-        <p class="muted" style="margin-top:8px">Abre ChatGPT con la petición ya escrita: 5 ideas con gancho para tu tema y la categoría elegida. También se copia por si prefieres pegarla en otra IA.</p>
+        <button class="btn-ia" id="btnIA">✨ Generar idea con IA</button>
+        <p class="muted" style="margin-top:8px">La IA crea aquí mismo una idea con gancho para tu tema y la categoría elegida. Necesita internet. Si el servicio gratuito no responde, se abre ChatGPT con la petición lista.</p>
       </div>
       <div class="tip">💡 <b>El gancho lo es todo.</b> Si no atrapas en los primeros 1–3 segundos, TikTok deja de mostrar tu vídeo. Empieza siempre con la parte más impactante.</div>
     </section>
@@ -583,17 +583,55 @@
     if (state.tema) $('iaTema').value = state.tema;
     $('iaTema').addEventListener('change', () => { state.tema = $('iaTema').value.trim(); save(); });
 
-    $('btnIA').onclick = async () => {
-      const tema = $('iaTema').value.trim();
-      const prompt =
-        `Eres un experto en crecimiento en TikTok. Dame 5 ideas originales y concretas de vídeo de TikTok` +
+    function buildPrompt(tema) {
+      return `Eres un experto en crecimiento en TikTok. Dame UNA idea original y concreta de vídeo de TikTok` +
         ` de la categoría "${ideaCat}"` +
         (tema ? ` para una cuenta sobre "${tema}"` : '') +
-        `, pensadas para conseguir seguidores. Para cada una dame:\n` +
-        `IDEA: (la idea en 1 o 2 frases)\nGANCHO: (frase gancho para los primeros 3 segundos, entre comillas)\n` +
-        `Responde en español.`;
-      await copy(prompt, '📋 Prompt copiado — abriendo ChatGPT…');
-      window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+        `, pensada para conseguir seguidores. Responde en español EXACTAMENTE con este formato y nada más:\n` +
+        `IDEA: (la idea en 1 o 2 frases)\nGANCHO: (frase gancho para los primeros 3 segundos, entre comillas)`;
+    }
+
+    $('btnIA').onclick = async () => {
+      const btn = $('btnIA');
+      const tema = $('iaTema').value.trim();
+      const prompt = buildPrompt(tema);
+      btn.disabled = true;
+      btn.textContent = '✨ Generando…';
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 40000);
+        const res = await fetch('https://text.pollinations.ai/openai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: ctrl.signal,
+          body: JSON.stringify({
+            model: 'openai',
+            messages: [{ role: 'user', content: prompt }],
+            private: true
+          })
+        });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error('http ' + res.status);
+        const j = await res.json();
+        const text = (j?.choices?.[0]?.message?.content ?? '').toString().trim();
+        let idea = text, hook = '';
+        const m = text.match(/IDEA:\s*([\s\S]*?)\s*GANCHO:\s*([\s\S]*)/i);
+        if (m) { idea = m[1].trim(); hook = m[2].trim(); }
+        if (!idea) throw new Error('vacío');
+        lastIdea = null;
+        $('ideaTag').textContent = `✨ IA · ${ideaCat}` + (tema ? ` · ${tema}` : '');
+        $('ideaText').textContent = idea;
+        $('hookText').textContent = hook || pick(HOOKS);
+        toast('✨ Idea generada con IA');
+      } catch (e) {
+        // plan B: abrir ChatGPT con el prompt listo
+        toast('⚠️ La IA no respondió, abriendo ChatGPT…');
+        await copy(prompt, '⚠️ La IA no respondió. Prompt copiado, abriendo ChatGPT…');
+        window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ Generar idea con IA';
+      }
     };
 
     // ---------- hashtags ----------
