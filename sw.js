@@ -1,4 +1,4 @@
-const CACHE = 'impulso-v2';
+const CACHE = 'impulso-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -23,6 +23,7 @@ self.addEventListener('activate', e => {
 // Red primero, caché como respaldo (la app funciona offline)
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  if (new URL(e.request.url).origin !== self.location.origin) return; // no cachear la IA
   e.respondWith(
     fetch(e.request)
       .then(res => {
