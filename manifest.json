@@ -1,7 +1,7 @@
 {
-  "name": "Mis Seguidores TikTok",
-  "short_name": "Seguidores",
-  "description": "Registra y sigue el crecimiento de tus seguidores de TikTok",
+  "name": "Impulso TikTok",
+  "short_name": "Impulso",
+  "description": "Asistente para crecer en TikTok: ideas de contenido, rachas de publicación, hashtags y horarios",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

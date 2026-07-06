@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0f0f13" />
-  <meta name="description" content="Registra y sigue el crecimiento de tus seguidores de TikTok" />
-  <title>Mis Seguidores TikTok</title>
+  <meta name="description" content="Asistente para crecer en TikTok: ideas de contenido, rachas de publicación, hashtags y horarios" />
+  <title>Impulso TikTok</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
   <link rel="apple-touch-icon" href="icon-192.png" />
@@ -14,12 +14,13 @@
       --bg: #0f0f13;
       --card: #1a1a22;
       --card2: #22222c;
+      --border: #2c2c38;
       --text: #f5f5f7;
       --muted: #9a9aa5;
       --cyan: #25f4ee;
       --pink: #fe2c55;
       --green: #4ade80;
-      --red: #f87171;
+      --gold: #fbbf24;
       --radius: 16px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,140 +30,163 @@
       color: var(--text);
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
-      padding-bottom: env(safe-area-inset-bottom);
     }
-    .wrap { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 18px 16px calc(84px + env(safe-area-inset-bottom)); }
 
-    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    header img { width: 44px; height: 44px; border-radius: 12px; }
-    header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
-    header p { font-size: 0.8rem; color: var(--muted); }
-
-    .hero {
-      background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
-      border: 1px solid #2c2c38;
-      border-radius: var(--radius);
-      padding: 22px 20px;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .hero .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-    .hero .big {
-      font-size: 2.6rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin: 6px 0 4px;
-      background: linear-gradient(90deg, var(--cyan), #fff 50%, var(--pink));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero .delta { font-size: 0.95rem; font-weight: 600; }
-    .hero .delta.up { color: var(--green); }
-    .hero .delta.down { color: var(--red); }
-    .hero .delta.flat { color: var(--muted); }
-
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-    .stat {
-      background: var(--card);
-      border: 1px solid #2c2c38;
-      border-radius: 12px;
-      padding: 12px 8px;
-      text-align: center;
-    }
-    .stat .v { font-size: 1.05rem; font-weight: 700; }
-    .stat .k { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    header img { width: 42px; height: 42px; border-radius: 12px; }
+    header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; }
+    header p { font-size: 0.78rem; color: var(--muted); }
 
     .card {
       background: var(--card);
-      border: 1px solid #2c2c38;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 18px 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .card h2 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+    .muted { color: var(--muted); font-size: 0.78rem; }
 
-    form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 4px; }
-    input[type="number"], input[type="date"] {
+    /* ---- pestañas ---- */
+    section[data-tab] { display: none; }
+    section[data-tab].active { display: block; }
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+      background: rgba(20, 20, 27, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    nav button {
+      flex: 1; background: none; border: none; color: var(--muted);
+      font-size: 0.68rem; font-weight: 600; padding: 9px 2px 10px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    nav button .ic { font-size: 1.25rem; }
+    nav button.active { color: var(--cyan); }
+
+    /* ---- racha ---- */
+    .streak-hero {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .streak-hero .big { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; }
+    .streak-hero .lbl { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+    .streak-stats { display: flex; justify-content: center; gap: 26px; margin-top: 14px; }
+    .streak-stats div { text-align: center; }
+    .streak-stats .v { font-weight: 700; font-size: 1.05rem; }
+    .streak-stats .k { color: var(--muted); font-size: 0.68rem; }
+
+    .btn-big {
       width: 100%;
-      background: var(--bg);
-      border: 1px solid #33333f;
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 1rem;
-      padding: 11px 12px;
-      outline: none;
-      -webkit-appearance: none;
-      appearance: none;
-      color-scheme: dark;
-    }
-    input:focus { border-color: var(--cyan); }
-    button.primary {
-      grid-column: 1 / -1;
       background: linear-gradient(90deg, var(--pink), #ff5d7e);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 13px;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.15s;
+      color: #fff; border: none; border-radius: 12px;
+      font-size: 1.05rem; font-weight: 700; padding: 15px;
+      cursor: pointer; transition: transform 0.1s;
+      margin-bottom: 14px;
     }
-    button.primary:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-big:active { transform: scale(0.98); }
+    .btn-big.done { background: var(--card2); color: var(--green); border: 1px solid var(--green); }
 
-    #chartBox { position: relative; }
-    canvas { width: 100%; height: 200px; display: block; }
-    .empty-chart {
-      height: 200px; display: flex; align-items: center; justify-content: center;
-      color: var(--muted); font-size: 0.85rem; text-align: center; padding: 0 20px;
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .cal-head b { font-size: 0.9rem; text-transform: capitalize; }
+    .cal-head button {
+      background: var(--card2); border: 1px solid var(--border); color: var(--text);
+      border-radius: 8px; width: 32px; height: 32px; font-size: 1rem; cursor: pointer;
     }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-grid .dow { text-align: center; font-size: 0.62rem; color: var(--muted); padding: 4px 0; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 9px; font-size: 0.8rem; color: var(--text);
+      background: var(--card2); border: 1px solid transparent; cursor: pointer;
+    }
+    .cal-day.out { opacity: 0.25; cursor: default; }
+    .cal-day.pub { background: linear-gradient(135deg, var(--pink), #c81e42); font-weight: 700; }
+    .cal-day.today { border-color: var(--cyan); }
+    .cal-day.future { opacity: 0.35; cursor: default; }
 
-    ul#historial { list-style: none; }
-    ul#historial li {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 11px 4px;
-      border-bottom: 1px solid #2a2a34;
-      gap: 10px;
+    /* ---- chips ---- */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .chip {
+      background: var(--card2); border: 1px solid var(--border); color: var(--text);
+      border-radius: 999px; padding: 8px 14px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
-    ul#historial li:last-child { border-bottom: none; }
-    .h-date { font-size: 0.8rem; color: var(--muted); min-width: 92px; }
-    .h-count { font-weight: 700; font-size: 1rem; flex: 1; text-align: right; }
-    .h-delta { font-size: 0.78rem; font-weight: 600; min-width: 64px; text-align: right; }
-    .h-delta.up { color: var(--green); }
-    .h-delta.down { color: var(--red); }
-    .h-delta.flat { color: var(--muted); }
-    .h-del {
-      background: none; border: none; color: var(--muted);
-      font-size: 1.05rem; cursor: pointer; padding: 4px 6px; border-radius: 8px;
-    }
-    .h-del:active { color: var(--red); }
+    .chip.active { background: var(--cyan); color: #06282a; border-color: var(--cyan); }
 
+    /* ---- ideas ---- */
+    .idea-card {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px 18px; margin-bottom: 12px; min-height: 150px;
+    }
+    .idea-card .tag { font-size: 0.68rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+    .idea-card .idea { font-size: 1.05rem; font-weight: 700; line-height: 1.4; margin: 10px 0 14px; }
+    .idea-card .hook-lbl { font-size: 0.68rem; color: var(--pink); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+    .idea-card .hook { font-size: 0.92rem; color: var(--text); font-style: italic; margin-top: 6px; line-height: 1.4; }
     .row-btns { display: flex; gap: 10px; }
     .row-btns button {
-      flex: 1;
-      background: var(--card2);
-      border: 1px solid #33333f;
-      color: var(--text);
-      border-radius: 10px;
-      padding: 11px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+      flex: 1; background: var(--card2); border: 1px solid var(--border); color: var(--text);
+      border-radius: 10px; padding: 12px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
     }
-    .row-btns button:active { background: #2b2b36; }
+    .row-btns button.accent { background: linear-gradient(90deg, var(--pink), #ff5d7e); border: none; color: #fff; }
+    .row-btns button:active { opacity: 0.85; }
+
+    /* ---- hashtags ---- */
+    .tags-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .tag-pill {
+      background: var(--bg); border: 1px solid var(--border); color: var(--cyan);
+      border-radius: 8px; padding: 6px 10px; font-size: 0.82rem; font-weight: 600;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #2a2a34; }
+    th { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td b { color: var(--cyan); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ---- checklist ---- */
+    .prog-bar { background: var(--card2); border-radius: 999px; height: 10px; overflow: hidden; margin: 8px 0 4px; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green)); border-radius: 999px; transition: width 0.3s; }
+    .check-group { margin-bottom: 4px; }
+    .check-group h3 { font-size: 0.78rem; color: var(--pink); text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 6px; }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 10px; padding: 9px 4px;
+      border-bottom: 1px solid #26262f; cursor: pointer; user-select: none;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item .box {
+      width: 21px; height: 21px; min-width: 21px; border-radius: 6px;
+      border: 2px solid #3a3a48; display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: #06282a; margin-top: 1px;
+    }
+    .check-item.on .box { background: var(--green); border-color: var(--green); }
+    .check-item span.txt { font-size: 0.88rem; line-height: 1.35; }
+    .check-item.on span.txt { color: var(--muted); text-decoration: line-through; }
+
+    .tip {
+      background: rgba(37, 244, 238, 0.07);
+      border: 1px solid rgba(37, 244, 238, 0.25);
+      border-radius: 12px; padding: 12px 14px;
+      font-size: 0.82rem; line-height: 1.45; margin-bottom: 14px;
+    }
+    .tip b { color: var(--cyan); }
 
     .toast {
-      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(80px);
+      position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(90px);
       background: #2c2c38; color: var(--text);
       padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
       transition: transform 0.25s ease; z-index: 50;
       box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      white-space: nowrap;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
-
-    .muted-note { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -170,91 +194,115 @@
     <header>
       <img src="icon-192.png" alt="" />
       <div>
-        <h1>Mis Seguidores TikTok</h1>
-        <p>Registra tu crecimiento</p>
+        <h1>Impulso TikTok</h1>
+        <p>Tu asistente para conseguir más seguidores</p>
       </div>
     </header>
 
-    <div class="hero">
-      <div class="label">Seguidores actuales</div>
-      <div class="big" id="actual">—</div>
-      <div class="delta flat" id="deltaHero">Sin registros todavía</div>
-    </div>
-
-    <div class="stats">
-      <div class="stat"><div class="v" id="stat7">—</div><div class="k">Últimos 7 días</div></div>
-      <div class="stat"><div class="v" id="stat30">—</div><div class="k">Últimos 30 días</div></div>
-      <div class="stat"><div class="v" id="statTotal">—</div><div class="k">Registros</div></div>
-    </div>
-
-    <div class="card">
-      <h2>➕ Nuevo registro</h2>
-      <form id="form">
-        <div>
-          <label for="count">Seguidores</label>
-          <input type="number" id="count" inputmode="numeric" min="0" step="1" placeholder="Ej: 1250" required />
+    <!-- ================= RACHA ================= -->
+    <section data-tab="racha" class="active">
+      <div class="streak-hero">
+        <div class="big" id="streakNum">🔥 0</div>
+        <div class="lbl">días seguidos publicando</div>
+        <div class="streak-stats">
+          <div><div class="v" id="bestStreak">0</div><div class="k">Mejor racha</div></div>
+          <div><div class="v" id="totalPub">0</div><div class="k">Días publicados</div></div>
+          <div><div class="v" id="monthPub">0</div><div class="k">Este mes</div></div>
         </div>
-        <div>
-          <label for="date">Fecha</label>
-          <input type="date" id="date" required />
-        </div>
-        <button type="submit" class="primary">Guardar</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <h2>📈 Evolución</h2>
-      <div id="chartBox">
-        <canvas id="chart" height="200"></canvas>
-        <div class="empty-chart" id="chartEmpty" hidden>Añade al menos 2 registros para ver la gráfica</div>
       </div>
-    </div>
 
-    <div class="card">
-      <h2>🗓️ Historial</h2>
-      <ul id="historial"></ul>
-      <div class="muted-note" id="emptyList" hidden>Todavía no hay registros</div>
-    </div>
+      <button class="btn-big" id="btnHoy">🎬 ¡Hoy publiqué!</button>
 
-    <div class="row-btns">
-      <button id="btnExport">⬇️ Exportar datos</button>
-      <button id="btnImport">⬆️ Importar datos</button>
-    </div>
-    <input type="file" id="fileImport" accept="application/json" hidden />
-    <p class="muted-note">Los datos se guardan solo en este dispositivo.</p>
+      <div class="card">
+        <div class="cal-head">
+          <button id="calPrev" aria-label="Mes anterior">‹</button>
+          <b id="calTitle"></b>
+          <button id="calNext" aria-label="Mes siguiente">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <p class="muted" style="margin-top:10px">Toca un día pasado para marcarlo o desmarcarlo.</p>
+      </div>
+
+      <div class="tip">💡 <b>La constancia es el algoritmo.</b> Las cuentas que crecen publican 1–3 vídeos al día, todos los días. No rompas la cadena 🔥</div>
+    </section>
+
+    <!-- ================= IDEAS ================= -->
+    <section data-tab="ideas">
+      <div class="chips" id="ideaCats"></div>
+      <div class="idea-card">
+        <div class="tag" id="ideaTag">Idea de vídeo</div>
+        <div class="idea" id="ideaText">Pulsa el dado para generar una idea 👇</div>
+        <div class="hook-lbl">Gancho para los primeros 3 segundos</div>
+        <div class="hook" id="hookText">—</div>
+      </div>
+      <div class="row-btns" style="margin-bottom:14px">
+        <button class="accent" id="btnIdea">🎲 Otra idea</button>
+        <button id="btnCopyIdea">📋 Copiar</button>
+      </div>
+      <div class="tip">💡 <b>El gancho lo es todo.</b> Si no atrapas en los primeros 1–3 segundos, TikTok deja de mostrar tu vídeo. Empieza siempre con la parte más impactante.</div>
+    </section>
+
+    <!-- ================= HASHTAGS ================= -->
+    <section data-tab="hashtags">
+      <div class="card">
+        <h2>#️⃣ Hashtags por nicho</h2>
+        <div class="chips" id="nicheChips"></div>
+        <div class="tags-box" id="tagsBox"></div>
+        <div class="row-btns">
+          <button class="accent" id="btnCopyTags">📋 Copiar hashtags</button>
+        </div>
+        <p class="muted" style="margin-top:10px">Usa 3–5 hashtags relevantes por vídeo. Más no ayuda.</p>
+      </div>
+
+      <div class="card">
+        <h2>⏰ Mejores horarios para publicar</h2>
+        <table>
+          <tr><th>Día</th><th>Horas con más audiencia</th></tr>
+          <tr><td>Lunes a viernes</td><td><b>12:00–14:00</b> y <b>19:00–23:00</b></td></tr>
+          <tr><td>Sábado</td><td><b>11:00–13:00</b> y <b>20:00–24:00</b></td></tr>
+          <tr><td>Domingo</td><td><b>11:00–14:00</b> y <b>19:00–22:00</b></td></tr>
+        </table>
+        <p class="muted" style="margin-top:10px">Orientativo para audiencia hispana. Con una cuenta Pro (gratis), revisa en TikTok → Herramientas de creador → Estadísticas los horarios reales de TU audiencia.</p>
+      </div>
+    </section>
+
+    <!-- ================= CHECKLIST ================= -->
+    <section data-tab="checklist">
+      <div class="card">
+        <h2>✅ Tácticas de crecimiento</h2>
+        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        <p class="muted" id="progText">0 de 0 completadas</p>
+        <div id="checkGroups"></div>
+      </div>
+      <div class="tip">⚠️ <b>Nunca compres seguidores ni uses bots.</b> TikTok los detecta, entierra tus vídeos y puede cerrarte la cuenta. El crecimiento real viene del contenido.</div>
+    </section>
   </div>
+
+  <nav>
+    <button data-nav="racha" class="active"><span class="ic">🔥</span>Racha</button>
+    <button data-nav="ideas"><span class="ic">💡</span>Ideas</button>
+    <button data-nav="hashtags"><span class="ic">#️⃣</span>Hashtags</button>
+    <button data-nav="checklist"><span class="ic">✅</span>Checklist</button>
+  </nav>
 
   <div class="toast" id="toast"></div>
 
   <script>
-    const KEY = 'tiktok-seguidores-v1';
-
-    // ---- datos ----
-    function load() {
-      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
-      catch { return []; }
-    }
-    function save(entries) {
-      localStorage.setItem(KEY, JSON.stringify(entries));
-    }
-    // entradas: [{date: 'YYYY-MM-DD', count: number}] ordenadas por fecha asc
-    let entries = load().sort((a, b) => a.date.localeCompare(b.date));
-
-    const fmt = new Intl.NumberFormat('es');
-    const fmtDate = d => {
-      const [y, m, day] = d.split('-');
-      return `${day}/${m}/${y}`;
-    };
-    const signed = n => (n > 0 ? '+' : '') + fmt.format(n);
-
-    // ---- UI ----
+    const KEY = 'impulso-tiktok-v1';
     const $ = id => document.getElementById(id);
 
-    function todayStr() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    // ---------- datos persistentes ----------
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+      catch { return {}; }
     }
-    $('date').value = todayStr();
+    const state = Object.assign({ published: [], checks: {}, niche: 'Virales' }, load());
+    // migrar datos de la versión anterior (registro de seguidores) si existieran: no aplican, se ignoran
+    const pubSet = new Set(state.published);
+    function save() {
+      state.published = [...pubSet].sort();
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }
 
     function toast(msg) {
       const t = $('toast');
@@ -263,251 +311,347 @@
       clearTimeout(t._h);
       t._h = setTimeout(() => t.classList.remove('show'), 2200);
     }
-
-    function deltaSince(days) {
-      if (entries.length === 0) return null;
-      const last = entries[entries.length - 1];
-      const cutoff = new Date(last.date);
-      cutoff.setDate(cutoff.getDate() - days);
-      const cutStr = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-${String(cutoff.getDate()).padStart(2, '0')}`;
-      // registro más reciente anterior o igual al corte; si no hay, el más antiguo dentro del rango
-      let base = null;
-      for (const e of entries) {
-        if (e.date <= cutStr) base = e;
+    async function copy(text, msg) {
+      try { await navigator.clipboard.writeText(text); toast(msg); }
+      catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove(); toast(msg);
       }
-      if (!base) base = entries[0];
-      if (base === last) return null;
-      return last.count - base.count;
     }
 
-    function render() {
-      // hero
-      if (entries.length === 0) {
-        $('actual').textContent = '—';
-        $('deltaHero').textContent = 'Sin registros todavía';
-        $('deltaHero').className = 'delta flat';
-      } else {
-        const last = entries[entries.length - 1];
-        $('actual').textContent = fmt.format(last.count);
-        if (entries.length >= 2) {
-          const prev = entries[entries.length - 2];
-          const d = last.count - prev.count;
-          const el = $('deltaHero');
-          el.textContent = `${signed(d)} desde el ${fmtDate(prev.date)}`;
-          el.className = 'delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : 'flat');
-        } else {
-          $('deltaHero').textContent = `Registrado el ${fmtDate(last.date)}`;
-          $('deltaHero').className = 'delta flat';
-        }
-      }
+    // ---------- navegación ----------
+    document.querySelectorAll('nav button').forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll('nav button').forEach(x => x.classList.toggle('active', x === b));
+        document.querySelectorAll('section[data-tab]').forEach(s =>
+          s.classList.toggle('active', s.dataset.tab === b.dataset.nav));
+        window.scrollTo(0, 0);
+      };
+    });
 
-      // stats
-      const d7 = deltaSince(7), d30 = deltaSince(30);
-      $('stat7').textContent = d7 === null ? '—' : signed(d7);
-      $('stat7').style.color = d7 > 0 ? 'var(--green)' : d7 < 0 ? 'var(--red)' : '';
-      $('stat30').textContent = d30 === null ? '—' : signed(d30);
-      $('stat30').style.color = d30 > 0 ? 'var(--green)' : d30 < 0 ? 'var(--red)' : '';
-      $('statTotal').textContent = entries.length;
+    // ---------- racha ----------
+    const dstr = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const todayStr = () => dstr(new Date());
 
-      // historial (más reciente arriba)
-      const ul = $('historial');
-      ul.innerHTML = '';
-      $('emptyList').hidden = entries.length > 0;
-      [...entries].reverse().forEach((e, revIdx) => {
-        const idx = entries.length - 1 - revIdx;
-        const prev = idx > 0 ? entries[idx - 1] : null;
-        const li = document.createElement('li');
-
-        const date = document.createElement('span');
-        date.className = 'h-date';
-        date.textContent = fmtDate(e.date);
-
-        const count = document.createElement('span');
-        count.className = 'h-count';
-        count.textContent = fmt.format(e.count);
-
-        const delta = document.createElement('span');
-        delta.className = 'h-delta flat';
+    function currentStreak() {
+      let n = 0;
+      const d = new Date();
+      if (!pubSet.has(dstr(d))) d.setDate(d.getDate() - 1); // si hoy aún no, cuenta desde ayer
+      while (pubSet.has(dstr(d))) { n++; d.setDate(d.getDate() - 1); }
+      return n;
+    }
+    function bestStreakCalc() {
+      const days = [...pubSet].sort();
+      let best = 0, run = 0, prev = null;
+      for (const s of days) {
         if (prev) {
-          const d = e.count - prev.count;
-          delta.textContent = signed(d);
-          delta.className = 'h-delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : 'flat');
-        } else {
-          delta.textContent = '·';
-        }
+          const p = new Date(prev); p.setDate(p.getDate() + 1);
+          run = dstr(p) === s ? run + 1 : 1;
+        } else run = 1;
+        best = Math.max(best, run);
+        prev = s;
+      }
+      return best;
+    }
 
-        const del = document.createElement('button');
-        del.className = 'h-del';
-        del.textContent = '✕';
-        del.setAttribute('aria-label', 'Eliminar registro');
-        del.onclick = () => {
-          if (confirm(`¿Eliminar el registro del ${fmtDate(e.date)} (${fmt.format(e.count)})?`)) {
-            entries.splice(idx, 1);
-            save(entries);
-            render();
-            toast('Registro eliminado');
-          }
+    let calY, calM; // mes visible
+    { const n = new Date(); calY = n.getFullYear(); calM = n.getMonth(); }
+
+    const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const DOW = ['L','M','X','J','V','S','D'];
+
+    function renderCal() {
+      $('calTitle').textContent = `${MESES[calM]} ${calY}`;
+      const grid = $('calGrid');
+      grid.innerHTML = '';
+      DOW.forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'dow'; el.textContent = d;
+        grid.appendChild(el);
+      });
+      const first = new Date(calY, calM, 1);
+      const startPad = (first.getDay() + 6) % 7; // lunes primero
+      const daysIn = new Date(calY, calM + 1, 0).getDate();
+      const today = todayStr();
+      for (let i = 0; i < startPad; i++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day out';
+        grid.appendChild(el);
+      }
+      for (let d = 1; d <= daysIn; d++) {
+        const ds = `${calY}-${String(calM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const el = document.createElement('div');
+        el.className = 'cal-day';
+        el.textContent = d;
+        if (pubSet.has(ds)) el.classList.add('pub');
+        if (ds === today) el.classList.add('today');
+        if (ds > today) el.classList.add('future');
+        else el.onclick = () => {
+          pubSet.has(ds) ? pubSet.delete(ds) : pubSet.add(ds);
+          save(); renderStreak();
         };
-
-        li.append(date, count, delta, del);
-        ul.appendChild(li);
-      });
-
-      drawChart();
+        grid.appendChild(el);
+      }
     }
 
-    // ---- gráfica ----
-    function drawChart() {
-      const canvas = $('chart');
-      const empty = $('chartEmpty');
-      if (entries.length < 2) {
-        canvas.hidden = true;
-        empty.hidden = false;
-        return;
-      }
-      canvas.hidden = false;
-      empty.hidden = true;
-
-      const dpr = window.devicePixelRatio || 1;
-      const cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
-      const cssH = 200;
-      canvas.width = cssW * dpr;
-      canvas.height = cssH * dpr;
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, cssW, cssH);
-
-      const pad = { l: 8, r: 8, t: 14, b: 22 };
-      const W = cssW - pad.l - pad.r;
-      const H = cssH - pad.t - pad.b;
-
-      const xs = entries.map(e => new Date(e.date + 'T00:00:00').getTime());
-      const ys = entries.map(e => e.count);
-      const minX = Math.min(...xs), maxX = Math.max(...xs);
-      let minY = Math.min(...ys), maxY = Math.max(...ys);
-      if (minY === maxY) { minY -= 1; maxY += 1; }
-      const yPad = (maxY - minY) * 0.12;
-      minY -= yPad; maxY += yPad;
-
-      const X = t => pad.l + ((t - minX) / (maxX - minX)) * W;
-      const Y = v => pad.t + H - ((v - minY) / (maxY - minY)) * H;
-
-      // líneas guía
-      ctx.strokeStyle = '#2a2a34';
-      ctx.lineWidth = 1;
-      ctx.font = '10px system-ui';
-      ctx.fillStyle = '#9a9aa5';
-      for (let i = 0; i <= 3; i++) {
-        const v = minY + ((maxY - minY) * i) / 3;
-        const y = Y(v);
-        ctx.beginPath();
-        ctx.moveTo(pad.l, y);
-        ctx.lineTo(pad.l + W, y);
-        ctx.stroke();
-        ctx.fillText(fmt.format(Math.round(v)), pad.l + 2, y - 3);
-      }
-
-      // área bajo la línea
-      const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + H);
-      grad.addColorStop(0, 'rgba(37, 244, 238, 0.25)');
-      grad.addColorStop(1, 'rgba(37, 244, 238, 0)');
-      ctx.beginPath();
-      entries.forEach((e, i) => {
-        const x = X(xs[i]), y = Y(ys[i]);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      });
-      ctx.lineTo(X(xs[xs.length - 1]), pad.t + H);
-      ctx.lineTo(X(xs[0]), pad.t + H);
-      ctx.closePath();
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // línea
-      ctx.beginPath();
-      entries.forEach((e, i) => {
-        const x = X(xs[i]), y = Y(ys[i]);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      });
-      ctx.strokeStyle = '#25f4ee';
-      ctx.lineWidth = 2.5;
-      ctx.lineJoin = 'round';
-      ctx.stroke();
-
-      // puntos
-      entries.forEach((e, i) => {
-        ctx.beginPath();
-        ctx.arc(X(xs[i]), Y(ys[i]), 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#fe2c55';
-        ctx.fill();
-      });
-
-      // fechas extremos
-      ctx.fillStyle = '#9a9aa5';
-      ctx.textAlign = 'left';
-      ctx.fillText(fmtDate(entries[0].date), pad.l, cssH - 6);
-      ctx.textAlign = 'right';
-      ctx.fillText(fmtDate(entries[entries.length - 1].date), pad.l + W, cssH - 6);
-      ctx.textAlign = 'left';
+    function renderStreak() {
+      const cs = currentStreak();
+      $('streakNum').textContent = `🔥 ${cs}`;
+      $('bestStreak').textContent = bestStreakCalc();
+      $('totalPub').textContent = pubSet.size;
+      const now = new Date();
+      const pref = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      $('monthPub').textContent = [...pubSet].filter(s => s.startsWith(pref)).length;
+      const done = pubSet.has(todayStr());
+      const btn = $('btnHoy');
+      btn.textContent = done ? '✅ ¡Publicado hoy! Toca para deshacer' : '🎬 ¡Hoy publiqué!';
+      btn.classList.toggle('done', done);
+      renderCal();
     }
 
-    window.addEventListener('resize', drawChart);
-
-    // ---- formulario ----
-    $('form').addEventListener('submit', ev => {
-      ev.preventDefault();
-      const count = parseInt($('count').value, 10);
-      const date = $('date').value;
-      if (isNaN(count) || count < 0 || !date) return;
-
-      const existing = entries.findIndex(e => e.date === date);
-      if (existing >= 0) {
-        if (!confirm(`Ya hay un registro del ${fmtDate(date)} (${fmt.format(entries[existing].count)}). ¿Reemplazarlo?`)) return;
-        entries[existing].count = count;
-      } else {
-        entries.push({ date, count });
-        entries.sort((a, b) => a.date.localeCompare(b.date));
+    $('btnHoy').onclick = () => {
+      const t = todayStr();
+      if (pubSet.has(t)) { pubSet.delete(t); }
+      else {
+        pubSet.add(t);
+        const cs = currentStreak();
+        toast(cs > 1 ? `🔥 ¡Racha de ${cs} días!` : '🔥 ¡Racha iniciada!');
       }
-      save(entries);
-      $('count').value = '';
-      render();
-      toast('✅ Guardado: ' + fmt.format(count) + ' seguidores');
-    });
-
-    // ---- exportar / importar ----
-    $('btnExport').onclick = () => {
-      const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'seguidores-tiktok.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-      toast('Datos exportados');
+      save(); renderStreak();
     };
-    $('btnImport').onclick = () => $('fileImport').click();
-    $('fileImport').addEventListener('change', async ev => {
-      const file = ev.target.files[0];
-      if (!file) return;
-      try {
-        const data = JSON.parse(await file.text());
-        if (!Array.isArray(data) || !data.every(e => typeof e.date === 'string' && typeof e.count === 'number')) {
-          throw new Error('formato');
-        }
-        if (!confirm(`Importar ${data.length} registros (se combinarán con los actuales)?`)) return;
-        const byDate = new Map(entries.map(e => [e.date, e]));
-        data.forEach(e => byDate.set(e.date, { date: e.date, count: e.count }));
-        entries = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
-        save(entries);
-        render();
-        toast('✅ Datos importados');
-      } catch {
-        toast('⚠️ Archivo no válido');
-      }
-      ev.target.value = '';
-    });
+    $('calPrev').onclick = () => { calM--; if (calM < 0) { calM = 11; calY--; } renderCal(); };
+    $('calNext').onclick = () => { calM++; if (calM > 11) { calM = 0; calY++; } renderCal(); };
 
-    render();
+    // ---------- ideas ----------
+    const IDEAS = {
+      'Humor': [
+        'Sketch exagerando una situación cotidiana de tu vida (fila del súper, clase, trabajo).',
+        'Imita los "tipos de personas" en un lugar: en el gym, en el bus, en una boda.',
+        'Expectativa vs realidad de algo que todos conocen.',
+        'Reacciona a tu primer vídeo de TikTok sin editar nada.',
+        'Doblaje de voz a tu mascota o a un bebé de la familia.',
+        '"Cosas que nadie admite pero todos hacemos" de tu nicho.',
+        'Lip-sync de un audio viral pero con un giro inesperado al final.',
+        'Recrea una conversación absurda real que hayas tenido.'
+      ],
+      'Tutoriales': [
+        'Enseña en 30 segundos algo que sabes hacer muy bien.',
+        '"3 trucos de [tu tema] que casi nadie usa".',
+        'Los errores más comunes de tu nicho y cómo evitarlos.',
+        'Un antes/después mostrando el proceso en time-lapse.',
+        'Responde en vídeo una pregunta frecuente de tus comentarios.',
+        'Tu herramienta o app favorita y cómo la usas de verdad.',
+        'Mini serie "de 0 a experto": parte 1 (y anuncia la parte 2).',
+        '"Lo que aprendí en X años, resumido en 60 segundos".'
+      ],
+      'Retos y trends': [
+        'Súmate a un sonido en tendencia pero con TU toque personal.',
+        'Haz dueto o stitch a un vídeo viral de tu nicho dando tu opinión.',
+        'Transición creativa: cambio de outfit, de lugar o de época.',
+        'Reto de 7 días documentado: un vídeo por día (¡y racha asegurada!).',
+        'Recrea un trend "pero versión [tu nicho]".',
+        'Tendencia del momento + giro de humor que nadie espera.',
+        'Prueba un "life hack" viral y muestra si funciona o es mentira.',
+        'Haz la versión "low cost" de un vídeo con mucha producción.'
+      ],
+      'Vlog y lifestyle': [
+        '"Un día conmigo" resumido en 30 segundos con cortes rápidos.',
+        'Tu rutina de mañana o de noche REAL, sin filtro.',
+        'Mini tour: tu cuarto, tu setup, tu barrio o tu ciudad.',
+        '"Ven conmigo a..." (una compra, un evento, una cita médica).',
+        'Qué hay en mi mochila / bolso / nevera.',
+        '"Cosas pequeñas que me hicieron feliz esta semana".',
+        'Cocina lo que vas a cenar mientras cuentas una historia.',
+        'Tu lugar favorito y por qué (con buenas tomas).'
+      ],
+      'Storytime': [
+        'Una historia real tuya con gancho fuerte: empieza por el final.',
+        '"Opinión impopular:" sobre algo de tu nicho (genera comentarios).',
+        '"La vez que casi..." con pausa de suspenso a mitad del vídeo.',
+        'Una lección que aprendiste por las malas.',
+        'Desmiente un mito común de tu tema con argumentos.',
+        '"Lo que haría diferente si empezara hoy desde cero".',
+        'Lee y responde el comentario más polémico que te hayan dejado.',
+        'Cuenta una coincidencia increíble que te haya pasado.'
+      ],
+      'Detrás de cámaras': [
+        'Cómo grabas y editas tus vídeos (a la gente le encanta el proceso).',
+        'Bloopers y tomas falsas de tus últimos vídeos.',
+        'Tu proceso creativo en time-lapse: de la idea al vídeo publicado.',
+        '"Lo que no se ve" de tu trabajo, hobby o negocio.',
+        'Evolución: tu primer vídeo vs el de ahora, lado a lado.',
+        'Tus metas del mes en TikTok y cómo vas (compromiso público).',
+        'El equipo (o el celular) con el que grabas todo.',
+        'Un error reciente y qué cambiaste gracias a él.'
+      ]
+    };
+    const HOOKS = [
+      '"No vas a creer lo que pasó cuando..."',
+      '"Esto es lo que nadie te dice sobre..."',
+      '"Deja de hacer esto si quieres crecer en..."',
+      '"3 errores que estás cometiendo con..."',
+      '"POV: ..." (ponte en situación desde el primer segundo)',
+      '"Lo probé para que tú no tengas que hacerlo"',
+      '"El truco que me hubiera gustado saber antes"',
+      '"Nadie habla de esto y es importante"',
+      '"Guarda este vídeo para cuando..."',
+      '"¿Sabías que...?" + dato que sorprenda',
+      '"Te apuesto a que no conocías esto"',
+      '"Así fue como pasé de X a Y"',
+      '"No hagas esto... haz esto otro" (mostrando ambos)',
+      '"Mira esto antes de que lo borren 👀"',
+      '"Esto me tomó años aprenderlo y te lo cuento en 30 segundos"',
+      '"Espera al final, la última parte te sorprende"',
+      '"Si tienes 15 segundos, esto te va a servir"',
+      'Empieza con el resultado final y luego cuenta cómo llegaste'
+    ];
 
-    // ---- PWA ----
+    let ideaCat = 'Humor';
+    let lastIdea = null;
+    function renderIdeaCats() {
+      const box = $('ideaCats');
+      box.innerHTML = '';
+      Object.keys(IDEAS).forEach(cat => {
+        const c = document.createElement('button');
+        c.className = 'chip' + (cat === ideaCat ? ' active' : '');
+        c.textContent = cat;
+        c.onclick = () => { ideaCat = cat; renderIdeaCats(); newIdea(); };
+        box.appendChild(c);
+      });
+    }
+    function pick(arr, avoid) {
+      let v;
+      do { v = arr[Math.floor(Math.random() * arr.length)]; }
+      while (arr.length > 1 && v === avoid);
+      return v;
+    }
+    function newIdea() {
+      const idea = pick(IDEAS[ideaCat], lastIdea);
+      lastIdea = idea;
+      const hook = pick(HOOKS);
+      $('ideaTag').textContent = ideaCat;
+      $('ideaText').textContent = idea;
+      $('hookText').textContent = hook;
+    }
+    $('btnIdea').onclick = newIdea;
+    $('btnCopyIdea').onclick = () =>
+      copy(`Idea (${ideaCat}): ${$('ideaText').textContent}\nGancho: ${$('hookText').textContent}`, '📋 Idea copiada');
+
+    // ---------- hashtags ----------
+    const NICHES = {
+      'Virales': ['#parati', '#fyp', '#viral', '#foryou', '#tendencia', '#viralvideo', '#paratii', '#fypシ'],
+      'Humor': ['#humor', '#comedia', '#risa', '#chistes', '#sketch', '#memes', '#humorlatino', '#parati'],
+      'Belleza': ['#belleza', '#makeup', '#maquillaje', '#skincare', '#beautytips', '#tutorialmakeup', '#glowup', '#parati'],
+      'Fitness': ['#fitness', '#gym', '#entrenamiento', '#ejercicio', '#fitnessmotivation', '#vidasana', '#gymtok', '#parati'],
+      'Comida': ['#comida', '#recetas', '#foodtok', '#cocina', '#recetasfaciles', '#antojo', '#cocinaencasa', '#parati'],
+      'Gaming': ['#gaming', '#gamer', '#videojuegos', '#gamingentiktok', '#clips', '#streamer', '#gameplay', '#parati'],
+      'Educación': ['#aprendeentiktok', '#sabiasque', '#datoscuriosos', '#educacion', '#tips', '#aprendecontiktok', '#curiosidades', '#parati'],
+      'Moda': ['#moda', '#outfit', '#ootd', '#estilo', '#fashiontiktok', '#lookdeldia', '#outfitideas', '#parati'],
+      'Música y baile': ['#musica', '#baile', '#dance', '#cover', '#cantante', '#trenddance', '#coreografia', '#parati'],
+      'Mascotas': ['#mascotas', '#perritos', '#gatos', '#petsoftiktok', '#animales', '#cutepets', '#perrostiktok', '#parati'],
+      'Negocios': ['#emprendimiento', '#negocios', '#dinero', '#emprendedor', '#marketingdigital', '#finanzas', '#exito', '#parati'],
+      'Viajes': ['#viajes', '#travel', '#lugaresincreibles', '#turismo', '#viajeros', '#destinos', '#mochilero', '#parati']
+    };
+    function renderNiches() {
+      const box = $('nicheChips');
+      box.innerHTML = '';
+      Object.keys(NICHES).forEach(n => {
+        const c = document.createElement('button');
+        c.className = 'chip' + (n === state.niche ? ' active' : '');
+        c.textContent = n;
+        c.onclick = () => { state.niche = n; save(); renderNiches(); renderTags(); };
+        box.appendChild(c);
+      });
+    }
+    function renderTags() {
+      const box = $('tagsBox');
+      box.innerHTML = '';
+      (NICHES[state.niche] || NICHES['Virales']).forEach(t => {
+        const s = document.createElement('span');
+        s.className = 'tag-pill';
+        s.textContent = t;
+        box.appendChild(s);
+      });
+    }
+    $('btnCopyTags').onclick = () =>
+      copy((NICHES[state.niche] || []).join(' '), '📋 Hashtags copiados');
+
+    // ---------- checklist ----------
+    const CHECKS = [
+      ['Perfil', [
+        'Foto de perfil clara y llamativa (que se vea bien en pequeño)',
+        'Nombre de usuario corto y fácil de recordar',
+        'Bio de una línea que diga qué va a encontrar quien te siga',
+        'Elegir UN nicho y mantenerlo (el algoritmo premia la coherencia)'
+      ]],
+      ['Contenido', [
+        'Gancho en los primeros 1–3 segundos de cada vídeo',
+        'Subtítulos en pantalla (mucha gente ve sin sonido)',
+        'Buena luz (natural o aro de luz) y audio limpio',
+        'Terminar con llamada a la acción: "sígueme para la parte 2"',
+        'Duración con retención: 7–15 seg, o +60 seg si cuentas una historia'
+      ]],
+      ['Constancia', [
+        'Publicar 1–3 vídeos al día',
+        'Publicar siempre en tus mejores horarios (pestaña Hashtags ⏰)',
+        'Mantener la racha diaria de esta app 🔥'
+      ]],
+      ['Interacción', [
+        'Responder TODOS los comentarios en la primera hora',
+        'Responder comentarios con vídeo (cuenta como contenido nuevo)',
+        'Hacer dueto o stitch con vídeos grandes de tu nicho',
+        'Comentar con ingenio en cuentas grandes de tu nicho'
+      ]],
+      ['Tendencias', [
+        'Usar sonidos en tendencia (con tu propio giro)',
+        'Revisar la pestaña de tendencias todos los días 10 minutos',
+        'Usar 3–5 hashtags relevantes (no 30)'
+      ]]
+    ];
+    function renderChecks() {
+      const box = $('checkGroups');
+      box.innerHTML = '';
+      let total = 0, done = 0;
+      CHECKS.forEach(([group, items], gi) => {
+        const g = document.createElement('div');
+        g.className = 'check-group';
+        const h = document.createElement('h3');
+        h.textContent = group;
+        g.appendChild(h);
+        items.forEach((txt, ii) => {
+          const id = `${gi}-${ii}`;
+          const on = !!state.checks[id];
+          total++; if (on) done++;
+          const item = document.createElement('div');
+          item.className = 'check-item' + (on ? ' on' : '');
+          const boxEl = document.createElement('div');
+          boxEl.className = 'box';
+          boxEl.textContent = on ? '✓' : '';
+          const span = document.createElement('span');
+          span.className = 'txt';
+          span.textContent = txt;
+          item.append(boxEl, span);
+          item.onclick = () => {
+            state.checks[id] = !state.checks[id];
+            save(); renderChecks();
+          };
+          g.appendChild(item);
+        });
+        box.appendChild(g);
+      });
+      $('progFill').style.width = total ? `${(done / total) * 100}%` : '0%';
+      $('progText').textContent = `${done} de ${total} completadas`;
+    }
+
+    // ---------- init ----------
+    renderStreak();
+    renderIdeaCats();
+    newIdea();
+    renderNiches();
+    renderTags();
+    renderChecks();
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }

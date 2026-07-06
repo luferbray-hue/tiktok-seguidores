@@ -1,4 +1,4 @@
-const CACHE = 'seguidores-v1';
+const CACHE = 'impulso-v2';
 const ASSETS = [
   './',
   './index.html',
