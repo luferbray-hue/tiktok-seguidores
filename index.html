@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0f13" />
+  <meta name="description" content="Registra y sigue el crecimiento de tus seguidores de TikTok" />
+  <title>Mis Seguidores TikTok</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --card: #1a1a22;
+      --card2: #22222c;
+      --text: #f5f5f7;
+      --muted: #9a9aa5;
+      --cyan: #25f4ee;
+      --pink: #fe2c55;
+      --green: #4ade80;
+      --red: #f87171;
+      --radius: 16px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    header img { width: 44px; height: 44px; border-radius: 12px; }
+    header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { font-size: 0.8rem; color: var(--muted); }
+
+    .hero {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+      border: 1px solid #2c2c38;
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .hero .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .hero .big {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 6px 0 4px;
+      background: linear-gradient(90deg, var(--cyan), #fff 50%, var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .delta { font-size: 0.95rem; font-weight: 600; }
+    .hero .delta.up { color: var(--green); }
+    .hero .delta.down { color: var(--red); }
+    .hero .delta.flat { color: var(--muted); }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .stat {
+      background: var(--card);
+      border: 1px solid #2c2c38;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .stat .v { font-size: 1.05rem; font-weight: 700; }
+    .stat .k { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #2c2c38;
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      margin-bottom: 16px;
+    }
+    .card h2 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+
+    form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 4px; }
+    input[type="number"], input[type="date"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid #33333f;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 11px 12px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      color-scheme: dark;
+    }
+    input:focus { border-color: var(--cyan); }
+    button.primary {
+      grid-column: 1 / -1;
+      background: linear-gradient(90deg, var(--pink), #ff5d7e);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 13px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+    button.primary:active { transform: scale(0.98); opacity: 0.9; }
+
+    #chartBox { position: relative; }
+    canvas { width: 100%; height: 200px; display: block; }
+    .empty-chart {
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 0.85rem; text-align: center; padding: 0 20px;
+    }
+
+    ul#historial { list-style: none; }
+    ul#historial li {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 4px;
+      border-bottom: 1px solid #2a2a34;
+      gap: 10px;
+    }
+    ul#historial li:last-child { border-bottom: none; }
+    .h-date { font-size: 0.8rem; color: var(--muted); min-width: 92px; }
+    .h-count { font-weight: 700; font-size: 1rem; flex: 1; text-align: right; }
+    .h-delta { font-size: 0.78rem; font-weight: 600; min-width: 64px; text-align: right; }
+    .h-delta.up { color: var(--green); }
+    .h-delta.down { color: var(--red); }
+    .h-delta.flat { color: var(--muted); }
+    .h-del {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.05rem; cursor: pointer; padding: 4px 6px; border-radius: 8px;
+    }
+    .h-del:active { color: var(--red); }
+
+    .row-btns { display: flex; gap: 10px; }
+    .row-btns button {
+      flex: 1;
+      background: var(--card2);
+      border: 1px solid #33333f;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .row-btns button:active { background: #2b2b36; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(80px);
+      background: #2c2c38; color: var(--text);
+      padding: 10px 18px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+      transition: transform 0.25s ease; z-index: 50;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .muted-note { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="icon-192.png" alt="" />
+      <div>
+        <h1>Mis Seguidores TikTok</h1>
+        <p>Registra tu crecimiento</p>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="label">Seguidores actuales</div>
+      <div class="big" id="actual">—</div>
+      <div class="delta flat" id="deltaHero">Sin registros todavía</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v" id="stat7">—</div><div class="k">Últimos 7 días</div></div>
+      <div class="stat"><div class="v" id="stat30">—</div><div class="k">Últimos 30 días</div></div>
+      <div class="stat"><div class="v" id="statTotal">—</div><div class="k">Registros</div></div>
+    </div>
+
+    <div class="card">
+      <h2>➕ Nuevo registro</h2>
+      <form id="form">
+        <div>
+          <label for="count">Seguidores</label>
+          <input type="number" id="count" inputmode="numeric" min="0" step="1" placeholder="Ej: 1250" required />
+        </div>
+        <div>
+          <label for="date">Fecha</label>
+          <input type="date" id="date" required />
+        </div>
+        <button type="submit" class="primary">Guardar</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>📈 Evolución</h2>
+      <div id="chartBox">
+        <canvas id="chart" height="200"></canvas>
+        <div class="empty-chart" id="chartEmpty" hidden>Añade al menos 2 registros para ver la gráfica</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🗓️ Historial</h2>
+      <ul id="historial"></ul>
+      <div class="muted-note" id="emptyList" hidden>Todavía no hay registros</div>
+    </div>
+
+    <div class="row-btns">
+      <button id="btnExport">⬇️ Exportar datos</button>
+      <button id="btnImport">⬆️ Importar datos</button>
+    </div>
+    <input type="file" id="fileImport" accept="application/json" hidden />
+    <p class="muted-note">Los datos se guardan solo en este dispositivo.</p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const KEY = 'tiktok-seguidores-v1';
+
+    // ---- datos ----
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+      catch { return []; }
+    }
+    function save(entries) {
+      localStorage.setItem(KEY, JSON.stringify(entries));
+    }
+    // entradas: [{date: 'YYYY-MM-DD', count: number}] ordenadas por fecha asc
+    let entries = load().sort((a, b) => a.date.localeCompare(b.date));
+
+    const fmt = new Intl.NumberFormat('es');
+    const fmtDate = d => {
+      const [y, m, day] = d.split('-');
+      return `${day}/${m}/${y}`;
+    };
+    const signed = n => (n > 0 ? '+' : '') + fmt.format(n);
+
+    // ---- UI ----
+    const $ = id => document.getElementById(id);
+
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    $('date').value = todayStr();
+
+    function toast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._h);
+      t._h = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    function deltaSince(days) {
+      if (entries.length === 0) return null;
+      const last = entries[entries.length - 1];
+      const cutoff = new Date(last.date);
+      cutoff.setDate(cutoff.getDate() - days);
+      const cutStr = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-${String(cutoff.getDate()).padStart(2, '0')}`;
+      // registro más reciente anterior o igual al corte; si no hay, el más antiguo dentro del rango
+      let base = null;
+      for (const e of entries) {
+        if (e.date <= cutStr) base = e;
+      }
+      if (!base) base = entries[0];
+      if (base === last) return null;
+      return last.count - base.count;
+    }
+
+    function render() {
+      // hero
+      if (entries.length === 0) {
+        $('actual').textContent = '—';
+        $('deltaHero').textContent = 'Sin registros todavía';
+        $('deltaHero').className = 'delta flat';
+      } else {
+        const last = entries[entries.length - 1];
+        $('actual').textContent = fmt.format(last.count);
+        if (entries.length >= 2) {
+          const prev = entries[entries.length - 2];
+          const d = last.count - prev.count;
+          const el = $('deltaHero');
+          el.textContent = `${signed(d)} desde el ${fmtDate(prev.date)}`;
+          el.className = 'delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : 'flat');
+        } else {
+          $('deltaHero').textContent = `Registrado el ${fmtDate(last.date)}`;
+          $('deltaHero').className = 'delta flat';
+        }
+      }
+
+      // stats
+      const d7 = deltaSince(7), d30 = deltaSince(30);
+      $('stat7').textContent = d7 === null ? '—' : signed(d7);
+      $('stat7').style.color = d7 > 0 ? 'var(--green)' : d7 < 0 ? 'var(--red)' : '';
+      $('stat30').textContent = d30 === null ? '—' : signed(d30);
+      $('stat30').style.color = d30 > 0 ? 'var(--green)' : d30 < 0 ? 'var(--red)' : '';
+      $('statTotal').textContent = entries.length;
+
+      // historial (más reciente arriba)
+      const ul = $('historial');
+      ul.innerHTML = '';
+      $('emptyList').hidden = entries.length > 0;
+      [...entries].reverse().forEach((e, revIdx) => {
+        const idx = entries.length - 1 - revIdx;
+        const prev = idx > 0 ? entries[idx - 1] : null;
+        const li = document.createElement('li');
+
+        const date = document.createElement('span');
+        date.className = 'h-date';
+        date.textContent = fmtDate(e.date);
+
+        const count = document.createElement('span');
+        count.className = 'h-count';
+        count.textContent = fmt.format(e.count);
+
+        const delta = document.createElement('span');
+        delta.className = 'h-delta flat';
+        if (prev) {
+          const d = e.count - prev.count;
+          delta.textContent = signed(d);
+          delta.className = 'h-delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : 'flat');
+        } else {
+          delta.textContent = '·';
+        }
+
+        const del = document.createElement('button');
+        del.className = 'h-del';
+        del.textContent = '✕';
+        del.setAttribute('aria-label', 'Eliminar registro');
+        del.onclick = () => {
+          if (confirm(`¿Eliminar el registro del ${fmtDate(e.date)} (${fmt.format(e.count)})?`)) {
+            entries.splice(idx, 1);
+            save(entries);
+            render();
+            toast('Registro eliminado');
+          }
+        };
+
+        li.append(date, count, delta, del);
+        ul.appendChild(li);
+      });
+
+      drawChart();
+    }
+
+    // ---- gráfica ----
+    function drawChart() {
+      const canvas = $('chart');
+      const empty = $('chartEmpty');
+      if (entries.length < 2) {
+        canvas.hidden = true;
+        empty.hidden = false;
+        return;
+      }
+      canvas.hidden = false;
+      empty.hidden = true;
+
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
+      const cssH = 200;
+      canvas.width = cssW * dpr;
+      canvas.height = cssH * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, cssW, cssH);
+
+      const pad = { l: 8, r: 8, t: 14, b: 22 };
+      const W = cssW - pad.l - pad.r;
+      const H = cssH - pad.t - pad.b;
+
+      const xs = entries.map(e => new Date(e.date + 'T00:00:00').getTime());
+      const ys = entries.map(e => e.count);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      let minY = Math.min(...ys), maxY = Math.max(...ys);
+      if (minY === maxY) { minY -= 1; maxY += 1; }
+      const yPad = (maxY - minY) * 0.12;
+      minY -= yPad; maxY += yPad;
+
+      const X = t => pad.l + ((t - minX) / (maxX - minX)) * W;
+      const Y = v => pad.t + H - ((v - minY) / (maxY - minY)) * H;
+
+      // líneas guía
+      ctx.strokeStyle = '#2a2a34';
+      ctx.lineWidth = 1;
+      ctx.font = '10px system-ui';
+      ctx.fillStyle = '#9a9aa5';
+      for (let i = 0; i <= 3; i++) {
+        const v = minY + ((maxY - minY) * i) / 3;
+        const y = Y(v);
+        ctx.beginPath();
+        ctx.moveTo(pad.l, y);
+        ctx.lineTo(pad.l + W, y);
+        ctx.stroke();
+        ctx.fillText(fmt.format(Math.round(v)), pad.l + 2, y - 3);
+      }
+
+      // área bajo la línea
+      const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + H);
+      grad.addColorStop(0, 'rgba(37, 244, 238, 0.25)');
+      grad.addColorStop(1, 'rgba(37, 244, 238, 0)');
+      ctx.beginPath();
+      entries.forEach((e, i) => {
+        const x = X(xs[i]), y = Y(ys[i]);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.lineTo(X(xs[xs.length - 1]), pad.t + H);
+      ctx.lineTo(X(xs[0]), pad.t + H);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // línea
+      ctx.beginPath();
+      entries.forEach((e, i) => {
+        const x = X(xs[i]), y = Y(ys[i]);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#25f4ee';
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // puntos
+      entries.forEach((e, i) => {
+        ctx.beginPath();
+        ctx.arc(X(xs[i]), Y(ys[i]), 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fe2c55';
+        ctx.fill();
+      });
+
+      // fechas extremos
+      ctx.fillStyle = '#9a9aa5';
+      ctx.textAlign = 'left';
+      ctx.fillText(fmtDate(entries[0].date), pad.l, cssH - 6);
+      ctx.textAlign = 'right';
+      ctx.fillText(fmtDate(entries[entries.length - 1].date), pad.l + W, cssH - 6);
+      ctx.textAlign = 'left';
+    }
+
+    window.addEventListener('resize', drawChart);
+
+    // ---- formulario ----
+    $('form').addEventListener('submit', ev => {
+      ev.preventDefault();
+      const count = parseInt($('count').value, 10);
+      const date = $('date').value;
+      if (isNaN(count) || count < 0 || !date) return;
+
+      const existing = entries.findIndex(e => e.date === date);
+      if (existing >= 0) {
+        if (!confirm(`Ya hay un registro del ${fmtDate(date)} (${fmt.format(entries[existing].count)}). ¿Reemplazarlo?`)) return;
+        entries[existing].count = count;
+      } else {
+        entries.push({ date, count });
+        entries.sort((a, b) => a.date.localeCompare(b.date));
+      }
+      save(entries);
+      $('count').value = '';
+      render();
+      toast('✅ Guardado: ' + fmt.format(count) + ' seguidores');
+    });
+
+    // ---- exportar / importar ----
+    $('btnExport').onclick = () => {
+      const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'seguidores-tiktok.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast('Datos exportados');
+    };
+    $('btnImport').onclick = () => $('fileImport').click();
+    $('fileImport').addEventListener('change', async ev => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      try {
+        const data = JSON.parse(await file.text());
+        if (!Array.isArray(data) || !data.every(e => typeof e.date === 'string' && typeof e.count === 'number')) {
+          throw new Error('formato');
+        }
+        if (!confirm(`Importar ${data.length} registros (se combinarán con los actuales)?`)) return;
+        const byDate = new Map(entries.map(e => [e.date, e]));
+        data.forEach(e => byDate.set(e.date, { date: e.date, count: e.count }));
+        entries = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+        save(entries);
+        render();
+        toast('✅ Datos importados');
+      } catch {
+        toast('⚠️ Archivo no válido');
+      }
+      ev.target.value = '';
+    });
+
+    render();
+
+    // ---- PWA ----
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
